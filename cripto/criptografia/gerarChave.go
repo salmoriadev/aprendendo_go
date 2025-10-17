@@ -37,26 +37,32 @@ func DecodificarChaveDeBase64(chaveBase64 string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(chaveBase64)
 }
 
-func EscreverChavesParaArquivoPEM(chaves parDeChaves, caminho string) error {
+func EscreverChavePrivadaParaArquivoPEM(chavePrivada *rsa.PrivateKey, caminho string) error {
 	arquivo, err := os.Create(caminho)
 	if err != nil {
 		return err
 	}
 	defer arquivo.Close()
 
-	if err := pem.Encode(arquivo, &pem.Block{
-		Type:  "PRIVATE KEY",
-		Bytes: x509.MarshalPKCS1PrivateKey(chaves.ChavePrivada),
-	}); err != nil {
-		return err
+	blocoPEM := &pem.Block{
+		Type:  "RSA PRIVATE KEY",
+		Bytes: x509.MarshalPKCS1PrivateKey(chavePrivada),
 	}
 
-	if err := pem.Encode(arquivo, &pem.Block{
-		Type:  "PUBLIC KEY",
-		Bytes: x509.MarshalPKCS1PublicKey(chaves.ChavePublica),
-	}); err != nil {
+	return pem.Encode(arquivo, blocoPEM)
+}
+
+func EscreverChavePublicaParaArquivoPEM(chavePublica *rsa.PublicKey, caminho string) error {
+	arquivo, err := os.Create(caminho)
+	if err != nil {
 		return err
 	}
+	defer arquivo.Close()
 
-	return nil
+	blocoPEM := &pem.Block{
+		Type:  "RSA PUBLIC KEY",
+		Bytes: x509.MarshalPKCS1PublicKey(chavePublica),
+	}
+
+	return pem.Encode(arquivo, blocoPEM)
 }
