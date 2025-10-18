@@ -6,6 +6,7 @@ import (
 	"cryptopals/desafio03"
 	"cryptopals/desafio04"
 	"cryptopals/desafio05"
+	"cryptopals/desafio07"
 )
 
 func main() {
@@ -14,4 +15,5 @@ func main() {
 	desafio03.Desafio03()
 	desafio04.Desafio04()
 	desafio05.Desafio05()
+	desafio07.Desafio07()
 }
