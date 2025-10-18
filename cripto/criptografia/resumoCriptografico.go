@@ -2,10 +2,18 @@ package criptografia
 
 import (
 	"crypto/sha256"
-	"encoding/hex"
+	"os"
 )
 
-func GerarResumoCriptografico(data []byte) string {
+func GerarResumoCriptografico(data []byte) []byte {
 	hash := sha256.Sum256(data)
-	return hex.EncodeToString(hash[:])
+	return hash[:]
+}
+
+func PdfParaBytes(caminhoArquivoPdf string) ([]byte, error) {
+	arrayBytes, err := os.ReadFile(caminhoArquivoPdf)
+	if err != nil {
+		return nil, err
+	}
+	return arrayBytes, nil
 }
