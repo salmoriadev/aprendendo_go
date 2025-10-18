@@ -2,7 +2,6 @@ package desafio02
 
 import (
 	"encoding/hex"
-	"fmt"
 )
 
 func XorBytes(mensagem, chave []byte) []byte {
@@ -19,21 +18,19 @@ func XorBytes(mensagem, chave []byte) []byte {
 	return mensagem
 }
 
-func Desafio02() {
+func Desafio02() (string, error) {
 	hexString1 := "1c0111001f010100061a024b53535009181c"
 	hexString2 := "686974207468652062756c6c277320657965"
 
 	decodedBytes1, err := hex.DecodeString(hexString1)
 	if err != nil {
-		fmt.Println("Erro ao decodificar a string hexadecimal:", err)
-		return
+		return "", err
 	}
 	decodedBytes2, err := hex.DecodeString(hexString2)
 	if err != nil {
-		fmt.Println("Erro ao decodificar a string hexadecimal:", err)
-		return
+		return "", err
 	}
 	result := XorBytes(decodedBytes1, decodedBytes2)
 	resultString := hex.EncodeToString(result)
-	fmt.Println(resultString)
+	return resultString, nil
 }

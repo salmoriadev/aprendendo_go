@@ -21,7 +21,7 @@ func Desafio07() (string, error) {
 		return "", fmt.Errorf("falha ao decodificar base64: %w", err)
 	}
 
-	textoPlano, err := DecriptarAESECB(textoCifrado, chave)
+	textoPlano, err := DecifrarAESECB(textoCifrado, chave)
 	if err != nil {
 		return "", err
 	}
@@ -29,7 +29,7 @@ func Desafio07() (string, error) {
 	return string(textoPlano), nil
 }
 
-func DecriptarAESECB(dadosCifrados, chave []byte) ([]byte, error) {
+func DecifrarAESECB(dadosCifrados, chave []byte) ([]byte, error) {
 	cifra, err := aes.NewCipher(chave)
 	if err != nil {
 		return nil, fmt.Errorf("falha ao criar a cifra AES: %w", err)

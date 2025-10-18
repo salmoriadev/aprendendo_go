@@ -12,7 +12,7 @@ type Decifragem struct {
 	NumeroLinha int
 }
 
-func Desafio04() {
+func Desafio04() (Decifragem, error) {
 	var melhorResultado Decifragem
 
 	for i, hexLinha := range hexLista {
@@ -30,11 +30,9 @@ func Desafio04() {
 	}
 
 	if len(hexLista) > 0 {
-		fmt.Println("Linha: ", melhorResultado.NumeroLinha)
-		fmt.Printf("Chave: %c\n", rune(melhorResultado.Chave))
-		fmt.Println("Pontuação: ", melhorResultado.Pontuacao)
-		fmt.Println("Texto: ", melhorResultado.Texto)
+		return melhorResultado, nil
 	}
+	return Decifragem{}, fmt.Errorf("nenhuma linha foi processada com sucesso")
 }
 
 func DecifraByteCifra(linhaHex string, numeroLinha int) (Decifragem, error) {

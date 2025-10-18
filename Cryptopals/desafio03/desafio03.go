@@ -3,7 +3,6 @@ package desafio03
 import (
 	"encoding/hex"
 	"fmt"
-	"log"
 	"unicode"
 )
 
@@ -30,14 +29,14 @@ type ResultadoDecifrado struct {
 	Chave     byte
 }
 
-func Desafio03() {
+func Desafio03() (ResultadoDecifrado, error) {
 	hexCifra := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 	resultado, err := AcharChave(hexCifra)
 	if err != nil {
-		log.Fatalf("Erro ao decifrar: %v", err)
+		return ResultadoDecifrado{}, err
 	}
 
-	fmt.Println(resultado.Texto)
+	return resultado, nil
 }
 
 func AcharChave(entradaHex string) (ResultadoDecifrado, error) {
