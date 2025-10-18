@@ -89,15 +89,9 @@ func EscreverCertificadoParaArquivoPEM(certificado certificado, caminhoCompleto 
 	if err := os.MkdirAll(diretorio, 0755); err != nil {
 		return fmt.Errorf("erro ao criar diretório %s: %w", diretorio, err)
 	}
-
-	// Cria o diretório (e todos os pais necessários) se ele não existir
-	// 0755 são as permissões padrão para um diretório
 	if err := os.MkdirAll(diretorio, 0755); err != nil {
 		return fmt.Errorf("erro ao criar diretório %s: %w", diretorio, err)
 	}
-
-	// --- O RESTO DO SEU CÓDIGO CONTINUA IGUAL ---
-
 	blocoPEM := &pem.Block{Type: "CERTIFICATE", Bytes: certificado.CertificadoBytes}
 	dadosPEM := pem.EncodeToMemory(blocoPEM)
 
