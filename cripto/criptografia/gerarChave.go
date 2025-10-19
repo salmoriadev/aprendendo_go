@@ -4,22 +4,20 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
-	"encoding/base64"
 	"encoding/pem"
-	"os"
 )
 
-type parDeChaves struct {
+type ParDeChaves struct {
 	ChavePublica *rsa.PublicKey
 	ChavePrivada *rsa.PrivateKey
 }
 
-func NovaParDeChaves() parDeChaves {
-	return parDeChaves{}
+func NovoParDeChaves() ParDeChaves {
+	return ParDeChaves{}
 }
 
-func GerarChavePrivada(tamanho int) (parDeChaves, error) {
-	chave := NovaParDeChaves()
+func GerarChavePrivada(tamanho int) (ParDeChaves, error) {
+	chave := NovoParDeChaves()
 	var privada, err = rsa.GenerateKey(rand.Reader, tamanho)
 	if err != nil {
 		return chave, err
@@ -29,40 +27,18 @@ func GerarChavePrivada(tamanho int) (parDeChaves, error) {
 	return chave, nil
 }
 
-func CodificarChaveParaBase64(chave []byte) string {
-	return base64.StdEncoding.EncodeToString(chave)
-}
-
-func DecodificarChaveDeBase64(chaveBase64 string) ([]byte, error) {
-	return base64.StdEncoding.DecodeString(chaveBase64)
-}
-
-func EscreverChavePrivadaParaArquivoPEM(chavePrivada *rsa.PrivateKey, caminho string) error {
-	arquivo, err := os.Create(caminho)
-	if err != nil {
-		return err
-	}
-	defer arquivo.Close()
-
+func ChavePrivadaParaPEM(chavePrivada *rsa.PrivateKey) []byte {
 	blocoPEM := &pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(chavePrivada),
 	}
-
-	return pem.Encode(arquivo, blocoPEM)
+	return pem.EncodeToMemory(blocoPEM)
 }
 
-func EscreverChavePublicaParaArquivoPEM(chavePublica *rsa.PublicKey, caminho string) error {
-	arquivo, err := os.Create(caminho)
-	if err != nil {
-		return err
-	}
-	defer arquivo.Close()
-
+func ChavePublicaParaPEM(chavePublica *rsa.PublicKey) []byte {
 	blocoPEM := &pem.Block{
 		Type:  "RSA PUBLIC KEY",
 		Bytes: x509.MarshalPKCS1PublicKey(chavePublica),
 	}
-
-	return pem.Encode(arquivo, blocoPEM)
+	return pem.EncodeToMemory(blocoPEM)
 }

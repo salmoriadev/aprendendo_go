@@ -1,6 +1,7 @@
-package criptografia
+package servicos
 
 import (
+	"cripto/criptografia"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
@@ -8,8 +9,8 @@ import (
 	"os"
 )
 
-func LerChavesDeArquivoPEM(caminho string) (parDeChaves, error) {
-	chaves := NovaParDeChaves()
+func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
+	chaves := criptografia.NovoParDeChaves()
 	arquivo, err := os.Open(caminho)
 	if err != nil {
 		return chaves, err
@@ -40,8 +41,8 @@ func LerChavesDeArquivoPEM(caminho string) (parDeChaves, error) {
 	return chaves, nil
 }
 
-func LerCertificadoDeArquivoPEM(caminho string) (certificado, error) {
-	cert := NovoCertificado()
+func LerCertificadoDeArquivoPEM(caminho string) (criptografia.Certificado, error) {
+	cert := criptografia.NovoCertificado()
 	data, err := os.ReadFile(caminho)
 	if err != nil {
 		return cert, err

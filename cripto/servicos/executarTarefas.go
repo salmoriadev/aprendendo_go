@@ -1,0 +1,81 @@
+package servicos
+
+import (
+	"cripto/criptografia"
+	"crypto/x509/pkix"
+	"fmt"
+	"log"
+)
+
+func ExecucaoChaves(tamanhoChave int, caminho string) criptografia.ParDeChaves {
+	chaves, err := criptografia.GerarChavePrivada(tamanhoChave)
+	if err != nil {
+		fmt.Println("Erro ao gerar chave privada: ", err)
+		return criptografia.ParDeChaves{}
+	}
+
+	fmt.Println("Chave privada e pública geradas com sucesso")
+
+	dadosPEMPriv := criptografia.ChavePrivadaParaPEM(chaves.ChavePrivada)
+	err = escreverArquivo(caminho+"/chave_privada.pem", dadosPEMPriv)
+	if err != nil {
+		log.Fatalf("Erro ao escrever chave privada: %v", err)
+	}
+
+	dadosPEMPub := criptografia.ChavePublicaParaPEM(chaves.ChavePublica)
+	err = escreverArquivo(caminho+"/chave_publica.pem", dadosPEMPub)
+	if err != nil {
+		log.Fatalf("Erro ao escrever chave publica: %v", err)
+	}
+
+	return chaves
+}
+
+func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
+	tamanhoChave int, validadeCertAC int, validadeCert int, caminho string,
+	organizacao, pais, provincia, localidade, nomeComum string) {
+
+	fmt.Println("--- Etapa 1: Gerando a AC Raiz (Root CA) ---")
+	sujeitoAC := pkix.Name{
+		Organization: []string{"UFC"},
+		Country:      []string{"BR"},
+		Province:     []string{"Sao Paulo"},
+		Locality:     []string{"Sao Bernardo do Campo"},
+		CommonName:   "chama",
+	}
+
+	certAC, err := criptografia.GerarCertificadoAutoassinado(
+		chaveAC.ChavePrivada, sujeitoAC, validadeCertAC)
+	if err != nil {
+		log.Fatalf("Erro ao gerar certificado autoassinado para AC: %v", err)
+	}
+
+	dadosPEMCertAC := criptografia.CertificadoParaPEM(certAC)
+	err = escreverArquivo(caminho+"/certificado_ac.pem", dadosPEMCertAC)
+	if err != nil {
+		log.Fatalf("Erro ao escrever certificado da AC Raiz: %v", err)
+	}
+	fmt.Println("Certificado da AC Raiz escrito em arquivo com sucesso!")
+
+	fmt.Println("\n--- Etapa 2: Gerando Certificado do usuário ---")
+	sujeitoServidor := pkix.Name{
+		Organization: []string{organizacao},
+		Country:      []string{pais},
+		Province:     []string{provincia},
+		Locality:     []string{localidade},
+		CommonName:   nomeComum,
+	}
+	certServidor, err := criptografia.GerarCertificadoAssinadoPorAC(
+		chaveCert.ChavePrivada, sujeitoServidor,
+		validadeCert, certAC.Certificado, chaveAC.ChavePrivada)
+	if err != nil {
+		log.Fatalf("Erro ao gerar certificado de usuário: %v", err)
+	}
+
+	dadosPEMCertServidor := criptografia.CertificadoParaPEM(certServidor)
+	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertServidor)
+	if err != nil {
+		log.Fatalf("Erro ao escrever certificado do usuário: %v", err)
+	}
+	fmt.Println("Certificado do usuário gerado e assinado com sucesso!")
+}

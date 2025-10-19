@@ -2,6 +2,7 @@ package main
 
 import (
 	"cripto/criptografia"
+	"cripto/servicos"
 	"fmt"
 )
 
@@ -9,19 +10,31 @@ func main() {
 	tamanhoChaves := 2048
 	validadeCertAC := 10
 	validadeCert := 1
-
-	chaveAc := criptografia.ExecucaoChaves(tamanhoChaves, caminho)
-	chaveUsuario := criptografia.ExecucaoChaves(tamanhoChaves, caminho)
-	criptografia.ExecucaoCertificados(chaveAc, chaveUsuario, tamanhoChaves,
-		validadeCertAC, validadeCert, caminho, "Meu Site",
+	chaveAc := servicos.ExecucaoChaves(tamanhoChaves, caminho)
+	chaveUsuario := servicos.ExecucaoChaves(tamanhoChaves, caminho)
+	servicos.ExecucaoCertificados(chaveAc, chaveUsuario, tamanhoChaves,
+		validadeCertAC, validadeCert, caminho, "UFSC",
 		"BR", "Santa Catarina", "Florianopolis", "localhost")
+
 	caminhoArquivoTxt := caminho + "/mensagem.txt"
 	conteudoArquivo := "Esta é uma mensagem importante."
-	criptografia.GerarArquivoPDF(caminhoArquivoTxt, caminho+"/mensagem.pdf", conteudoArquivo)
-	criptografia.ResumirPDF(caminho+"/mensagem.pdf", caminho+"/resumo.txt")
-	assinatura := criptografia.AssinarDocumentoPDF(caminho+"/mensagem.pdf", caminho+"/assinatura.txt", chaveUsuario)
+
+	servicos.GerarArquivoPDF(caminhoArquivoTxt, caminho+"/mensagem.pdf", conteudoArquivo)
+
+	var estrategiaResumo criptografia.EstrategiaResumo = &criptografia.ResumoSha256{}
+	var estrategiaAssinatura criptografia.EstrategiaAssinatura = &criptografia.AssinaturaPkcs1v15{}
+
+	servicos.ResumirPDF(caminho+"/mensagem.pdf", caminho+"/resumo.txt",
+		estrategiaResumo)
+
+	assinatura := servicos.AssinarDocumentoPDF(caminho+"/mensagem.pdf", caminho+"/assinatura.txt", chaveUsuario,
+		estrategiaResumo, estrategiaAssinatura)
+
 	fmt.Println("Assinatura do documento PDF gerada com sucesso.")
-	valida := criptografia.VerificarAssinaturaDocumentoPDF(caminho+"/mensagem.pdf", assinatura, chaveUsuario.ChavePublica)
+
+	valida := servicos.VerificarAssinaturaDocumentoPDF(caminho+"/mensagem.pdf", assinatura, chaveUsuario.ChavePublica,
+		estrategiaResumo, estrategiaAssinatura)
+
 	if valida {
 		fmt.Println("A assinatura é válida.")
 	} else {

@@ -6,25 +6,27 @@ import (
 	"crypto/x509"
 	"crypto/x509/pkix"
 	"encoding/pem"
-	"fmt"
 	"math/big"
-	"os"
-	"path/filepath"
 	"time"
 )
 
-type certificado struct {
+type Certificado struct {
 	CertificadoBytes []byte
 	Certificado      *x509.Certificate
 }
 
-func NovoCertificado() certificado {
-	return certificado{}
+func NovoCertificado() Certificado {
+	return Certificado{}
+}
+
+func CertificadoParaPEM(certificado Certificado) []byte {
+	blocoPEM := &pem.Block{Type: "CERTIFICATE", Bytes: certificado.CertificadoBytes}
+	return pem.EncodeToMemory(blocoPEM)
 }
 
 func GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey, sujeito pkix.Name,
-	validadeEmAnos int) (certificado, error) {
-	var cert certificado = NovoCertificado()
+	validadeEmAnos int) (Certificado, error) {
+	var cert Certificado = NovoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
 	var permissoesDaChave x509.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageCRLSign
@@ -54,9 +56,9 @@ func GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey, sujeito pkix.Nam
 
 func GerarCertificadoAssinadoPorAC(chavePrivadaSujeito *rsa.PrivateKey, sujeito pkix.Name,
 	validadeEmAnos int, certPai *x509.Certificate,
-	chavePrivadaPai *rsa.PrivateKey) (certificado, error) {
+	chavePrivadaPai *rsa.PrivateKey) (Certificado, error) {
 
-	var cert certificado = NovoCertificado()
+	var cert Certificado = NovoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
 	var permissoesDaChave x509.KeyUsage = x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature
@@ -81,24 +83,4 @@ func GerarCertificadoAssinadoPorAC(chavePrivadaSujeito *rsa.PrivateKey, sujeito 
 		return cert, err
 	}
 	return cert, nil
-}
-
-func EscreverCertificadoParaArquivoPEM(certificado certificado, caminhoCompleto string) error {
-	diretorio := filepath.Dir(caminhoCompleto)
-
-	if err := os.MkdirAll(diretorio, 0755); err != nil {
-		return fmt.Errorf("erro ao criar diretório %s: %w", diretorio, err)
-	}
-	if err := os.MkdirAll(diretorio, 0755); err != nil {
-		return fmt.Errorf("erro ao criar diretório %s: %w", diretorio, err)
-	}
-	blocoPEM := &pem.Block{Type: "CERTIFICATE", Bytes: certificado.CertificadoBytes}
-	dadosPEM := pem.EncodeToMemory(blocoPEM)
-
-	err := os.WriteFile(caminhoCompleto, dadosPEM, 0644)
-	if err != nil {
-		return fmt.Errorf("erro ao escrever arquivo PEM: %w", err)
-	}
-
-	return nil
 }
