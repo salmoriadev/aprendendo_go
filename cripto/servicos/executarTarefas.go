@@ -35,7 +35,6 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	tamanhoChave int, validadeCertAC int, validadeCert int, caminho string,
 	organizacao, pais, provincia, localidade, nomeComum string) {
 
-	fmt.Println("--- Etapa 1: Gerando a AC Raiz (Root CA) ---")
 	sujeitoAC := pkix.Name{
 		Organization: []string{"UFC"},
 		Country:      []string{"BR"},
@@ -57,7 +56,6 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	}
 	fmt.Println("Certificado da AC Raiz escrito em arquivo com sucesso!")
 
-	fmt.Println("\n--- Etapa 2: Gerando Certificado do usuário ---")
 	sujeitoServidor := pkix.Name{
 		Organization: []string{organizacao},
 		Country:      []string{pais},

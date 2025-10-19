@@ -19,7 +19,9 @@ func main() {
 	caminhoArquivoTxt := caminho + "/mensagem.txt"
 	conteudoArquivo := "Esta é uma mensagem importante."
 
-	servicos.GerarArquivoPDF(caminhoArquivoTxt, caminho+"/mensagem.pdf", conteudoArquivo)
+	servicos.GerarArquivoPDF(
+		caminhoArquivoTxt, caminho+"/mensagem.pdf",
+		conteudoArquivo)
 
 	var estrategiaResumo criptografia.EstrategiaResumo = &criptografia.ResumoSha256{}
 	var estrategiaAssinatura criptografia.EstrategiaAssinatura = &criptografia.AssinaturaPkcs1v15{}
@@ -27,12 +29,14 @@ func main() {
 	servicos.ResumirPDF(caminho+"/mensagem.pdf", caminho+"/resumo.txt",
 		estrategiaResumo)
 
-	assinatura := servicos.AssinarDocumentoPDF(caminho+"/mensagem.pdf", caminho+"/assinatura.txt", chaveUsuario,
+	assinatura := servicos.AssinarDocumentoPDF(caminho+"/mensagem.pdf",
+		caminho+"/assinatura.txt", chaveUsuario,
 		estrategiaResumo, estrategiaAssinatura)
 
 	fmt.Println("Assinatura do documento PDF gerada com sucesso.")
 
-	valida := servicos.VerificarAssinaturaDocumentoPDF(caminho+"/mensagem.pdf", assinatura, chaveUsuario.ChavePublica,
+	valida := servicos.VerificarAssinaturaDocumentoPDF(caminho+"/mensagem.pdf",
+		assinatura, chaveUsuario.ChavePublica,
 		estrategiaResumo, estrategiaAssinatura)
 
 	if valida {

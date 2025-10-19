@@ -12,7 +12,8 @@ import (
 	"github.com/jung-kurt/gofpdf"
 )
 
-func GerarArquivoPDF(caminhoArquivoTxt string, caminhoArquivoPdf string, conteudoArquivo string) {
+func GerarArquivoPDF(caminhoArquivoTxt string, caminhoArquivoPdf string,
+	conteudoArquivo string) {
 	err := gerarArquivoTexto(caminhoArquivoTxt, conteudoArquivo)
 	if err != nil {
 		log.Fatalf("Erro ao gerar .txt: %v", err)
@@ -20,7 +21,8 @@ func GerarArquivoPDF(caminhoArquivoTxt string, caminhoArquivoPdf string, conteud
 	txtParaPdf(caminhoArquivoTxt, caminhoArquivoPdf)
 }
 
-func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string, estrategiaResumo criptografia.EstrategiaResumo) {
+func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string,
+	estrategiaResumo criptografia.EstrategiaResumo) {
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
 	if err != nil {
 		log.Fatalf("Erro ao ler PDF: %v", err)
@@ -34,8 +36,9 @@ func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string, estrategiaResumo
 	}
 }
 
-func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string, chaves criptografia.ParDeChaves,
-	estrategiaResumo criptografia.EstrategiaResumo, estrategiaAssinatura criptografia.EstrategiaAssinatura) []byte {
+func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
+	chaves criptografia.ParDeChaves, estrategiaResumo criptografia.EstrategiaResumo,
+	estrategiaAssinatura criptografia.EstrategiaAssinatura) []byte {
 
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
 	if err != nil {
@@ -55,8 +58,10 @@ func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string, cha
 	return assinatura
 }
 
-func VerificarAssinaturaDocumentoPDF(caminhoArquivoPdf string, assinatura []byte, chavePublica *rsa.PublicKey,
-	estrategiaResumo criptografia.EstrategiaResumo, estrategiaAssinatura criptografia.EstrategiaAssinatura) bool {
+func VerificarAssinaturaDocumentoPDF(caminhoArquivoPdf string,
+	assinatura []byte, chavePublica *rsa.PublicKey,
+	estrategiaResumo criptografia.EstrategiaResumo,
+	estrategiaAssinatura criptografia.EstrategiaAssinatura) bool {
 
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
 	if err != nil {
@@ -64,7 +69,8 @@ func VerificarAssinaturaDocumentoPDF(caminhoArquivoPdf string, assinatura []byte
 	}
 
 	resumoEmBytes := estrategiaResumo.Resumir(dados)
-	err = estrategiaAssinatura.VerificarAssinatura(resumoEmBytes, assinatura, chavePublica)
+	err = estrategiaAssinatura.VerificarAssinatura(resumoEmBytes,
+		assinatura, chavePublica)
 	if err != nil {
 		log.Printf("Erro ao verificar a assinatura: %v", err)
 		return false
