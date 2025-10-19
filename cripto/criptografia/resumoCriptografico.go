@@ -4,7 +4,9 @@ import (
 	"crypto/sha256"
 )
 
-type ResumoSha256 struct{}
+type ResumoSha256 struct {
+	Algoritmo string
+}
 
 func (e *ResumoSha256) Resumir(dados []byte) []byte {
 	hash := sha256.Sum256(dados)

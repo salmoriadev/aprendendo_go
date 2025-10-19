@@ -29,7 +29,7 @@ func GerarChavePrivada(tamanho int) (ParDeChaves, error) {
 
 func ChavePrivadaParaPEM(chavePrivada *rsa.PrivateKey) []byte {
 	blocoPEM := &pem.Block{
-		Type:  "RSA PRIVATE KEY",
+		Type:  "PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(chavePrivada),
 	}
 	return pem.EncodeToMemory(blocoPEM)
@@ -37,7 +37,7 @@ func ChavePrivadaParaPEM(chavePrivada *rsa.PrivateKey) []byte {
 
 func ChavePublicaParaPEM(chavePublica *rsa.PublicKey) []byte {
 	blocoPEM := &pem.Block{
-		Type:  "RSA PUBLIC KEY",
+		Type:  "PUBLIC KEY",
 		Bytes: x509.MarshalPKCS1PublicKey(chavePublica),
 	}
 	return pem.EncodeToMemory(blocoPEM)

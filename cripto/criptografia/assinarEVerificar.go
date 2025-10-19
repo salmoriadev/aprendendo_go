@@ -7,7 +7,9 @@ import (
 	"fmt"
 )
 
-type AssinaturaPkcs1v15 struct{}
+type AssinaturaPkcs1v15 struct {
+	TipoAssinatura string
+}
 
 func (e *AssinaturaPkcs1v15) Assinar(resumo []byte,
 	chavePrivada *rsa.PrivateKey) ([]byte, error) {

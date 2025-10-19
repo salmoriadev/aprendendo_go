@@ -56,22 +56,22 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	}
 	fmt.Println("Certificado da AC Raiz escrito em arquivo com sucesso!")
 
-	sujeitoServidor := pkix.Name{
+	sujeitoUsuario := pkix.Name{
 		Organization: []string{organizacao},
 		Country:      []string{pais},
 		Province:     []string{provincia},
 		Locality:     []string{localidade},
 		CommonName:   nomeComum,
 	}
-	certServidor, err := criptografia.GerarCertificadoAssinadoPorAC(
-		chaveCert.ChavePrivada, sujeitoServidor,
+	certUsuario, err := criptografia.GerarCertificadoAssinadoPorAC(
+		chaveCert.ChavePrivada, sujeitoUsuario,
 		validadeCert, certAC.Certificado, chaveAC.ChavePrivada)
 	if err != nil {
 		log.Fatalf("Erro ao gerar certificado de usuário: %v", err)
 	}
 
-	dadosPEMCertServidor := criptografia.CertificadoParaPEM(certServidor)
-	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertServidor)
+	dadosPEMCertUsuario := criptografia.CertificadoParaPEM(certUsuario)
+	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
 	if err != nil {
 		log.Fatalf("Erro ao escrever certificado do usuário: %v", err)
 	}
