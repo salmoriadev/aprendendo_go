@@ -49,7 +49,6 @@ func DecifrarAESECB(dadosCifrados, chave []byte) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("falha ao validar/remover o padding: %w", err)
 	}
-	fmt.Println(string(textoPlano))
 
 	return textoPlano, nil
 }

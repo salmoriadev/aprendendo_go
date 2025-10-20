@@ -34,7 +34,7 @@ func main() {
 		estrategiaResumo)
 
 	assinatura := servicos.AssinarDocumentoPDF(caminho+"/mensagem.pdf",
-		caminho+"/assinatura.txt", chaveUsuario,
+		caminho+"/assinatura.txt", &chaveUsuario,
 		estrategiaResumo, estrategiaAssinatura)
 
 	fmt.Println("Assinatura do documento PDF gerada com sucesso.")

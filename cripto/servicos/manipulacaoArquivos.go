@@ -37,7 +37,7 @@ func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string,
 }
 
 func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
-	chaves criptografia.ParDeChaves, estrategiaResumo criptografia.EstrategiaResumo,
+	chaves *criptografia.ParDeChaves, estrategiaResumo criptografia.EstrategiaResumo,
 	estrategiaAssinatura criptografia.EstrategiaAssinatura) []byte {
 
 	dados, err := pdfParaBytes(caminhoArquivoPdf)

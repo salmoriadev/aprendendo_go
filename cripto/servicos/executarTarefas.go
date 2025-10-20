@@ -44,12 +44,12 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	}
 
 	certAC, err := criptografia.GerarCertificadoAutoassinado(
-		chaveAC.ChavePrivada, sujeitoAC, validadeCertAC)
+		chaveAC.ChavePrivada, &sujeitoAC, validadeCertAC)
 	if err != nil {
 		log.Fatalf("Erro ao gerar certificado autoassinado para AC: %v", err)
 	}
 
-	dadosPEMCertAC := criptografia.CertificadoParaPEM(certAC)
+	dadosPEMCertAC := criptografia.CertificadoParaPEM(&certAC)
 	err = escreverArquivo(caminho+"/certificado_ac.pem", dadosPEMCertAC)
 	if err != nil {
 		log.Fatalf("Erro ao escrever certificado da AC Raiz: %v", err)
@@ -70,7 +70,7 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 		log.Fatalf("Erro ao gerar certificado de usuário: %v", err)
 	}
 
-	dadosPEMCertUsuario := criptografia.CertificadoParaPEM(certUsuario)
+	dadosPEMCertUsuario := criptografia.CertificadoParaPEM(&certUsuario)
 	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
 	if err != nil {
 		log.Fatalf("Erro ao escrever certificado do usuário: %v", err)

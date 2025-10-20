@@ -19,7 +19,7 @@ func NovoCertificado() Certificado {
 	return Certificado{}
 }
 
-func CertificadoParaPEM(certificado Certificado) []byte {
+func CertificadoParaPEM(certificado *Certificado) []byte {
 	blocoPEM := &pem.Block{
 		Type:  "CERTIFICATE",
 		Bytes: certificado.CertificadoBytes,
@@ -28,7 +28,7 @@ func CertificadoParaPEM(certificado Certificado) []byte {
 }
 
 func GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
-	sujeito pkix.Name, validadeEmAnos int) (Certificado, error) {
+	sujeito *pkix.Name, validadeEmAnos int) (Certificado, error) {
 	var cert Certificado = NovoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
@@ -38,7 +38,7 @@ func GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
 
 	cert.Certificado = &x509.Certificate{
 		SerialNumber:          big.NewInt(1),
-		Subject:               sujeito,
+		Subject:               *sujeito,
 		NotBefore:             inicioPrazo,
 		NotAfter:              validade,
 		KeyUsage:              permissoesDaChave,
