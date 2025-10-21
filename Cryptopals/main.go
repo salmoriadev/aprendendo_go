@@ -25,7 +25,9 @@ func main() {
 	println("Desafio 03:", resultado03.Texto)
 	println("Desafio 04:", resultado04.Texto)
 	println("Desafio 05:", resultado05)
-	println("Desafio 06: Chave -> ", chave06, "Texto decifrado -> ", resultado06)
+	println("Desafio 06: Chave -> ", chave06,
+		"Texto decifrado -> ", resultado06)
 	println("Desafio 07:", resultado07)
-	println("Desafio 08:", "Linha -> ", resultado08.NumeroLinha, "Cifra -> ", resultado08.Cifra)
+	println("Desafio 08:", "Linha -> ", resultado08.NumeroLinha,
+		"Cifra -> ", resultado08.Cifra)
 }

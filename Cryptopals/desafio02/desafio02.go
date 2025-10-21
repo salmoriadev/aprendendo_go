@@ -1,5 +1,13 @@
 package desafio02
 
+/*
+Desafio 02 - Operação XOR entre duas strings hexadecimais
+Neste desafio, você precisa realizar uma operação XOR entre
+duas strings hexadecimais. Apenas precisei fazer uma função
+para fazer o XOR entre dois arrays de bytes dentro de um for loop.
+Esse código será reutilizado no desafio 5.
+*/
+
 import (
 	"encoding/hex"
 )

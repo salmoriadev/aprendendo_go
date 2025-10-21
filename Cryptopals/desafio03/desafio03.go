@@ -1,5 +1,19 @@
 package desafio03
 
+/*
+Desafio 03 - Achar chave e decifrar cifra XOR de byte único
+Neste desafio, você precisa decifrar um texto que foi cifrado
+usando XOR com um único byte. Para isso, você deve tentar todas
+as combinações possíveis de chaves de 1 byte (0-255) e avaliar
+qual delas produz um texto legível. Para avaliar a legibilidade,
+você pode usar uma pontuação baseada na frequência das letras
+na língua inglesa. Fiz dessa forma, criando um mapa com a
+frequência das letras e somando os valores para cada caractere
+do texto decifrado. A chave que resultar na maior pontuação é
+considerada a correta, e o texto decifrado correspondente é o
+resultado final. O código será reutilizado no desafio 4 e 6.
+*/
+
 import (
 	"encoding/hex"
 	"fmt"
@@ -30,7 +44,8 @@ type ResultadoDecifrado struct {
 }
 
 func Desafio03() (ResultadoDecifrado, error) {
-	hexCifra := "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
+	hexCifra := "1b37373331363f78151b7f" +
+		"2b783431333d78397828372d363c78373e783a393b3736"
 	resultado, err := AcharChave(hexCifra)
 	if err != nil {
 		return ResultadoDecifrado{}, err
@@ -42,7 +57,8 @@ func Desafio03() (ResultadoDecifrado, error) {
 func AcharChave(entradaHex string) (ResultadoDecifrado, error) {
 	entradaHexBytes, err := hex.DecodeString(entradaHex)
 	if err != nil {
-		return ResultadoDecifrado{}, fmt.Errorf("falha ao decodificar a string hex: %w", err)
+		return ResultadoDecifrado{}, fmt.Errorf(
+			"falha ao decodificar a string hex: %w", err)
 	}
 
 	var melhorResultado ResultadoDecifrado

@@ -1,5 +1,10 @@
 package desafio01
 
+/*
+Desafio 01 - Convertendo Hexadecimal para ASCII
+Neste desafio, você precisa converter uma string hexadecimal.
+*/
+
 import (
 	"encoding/hex"
 	"fmt"

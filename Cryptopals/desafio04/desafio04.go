@@ -1,5 +1,17 @@
 package desafio04
 
+/*
+Desafio 04 - Detectando Single-Byte XOR
+Neste desafio, você precisa detectar qual linha em um arquivo
+contém uma cifra que foi cifrada usando uma cifra XOR de byte único. Para isso,
+você deve ler cada linha do arquivo, decodificar a string hexadecimal e tentar
+decifrar o texto usando todas as possíveis chaves de 1 byte (0-255). Para cada
+linha, você deve calcular a pontuação do texto decifrado e manter o controle
+da melhor pontuação encontrada até o momento. No final, você deve retornar o texto decifrado
+com a melhor pontuação, juntamente com a chave usada e o número da linha.
+O código reutiliza a lógica de pontuação do desafio 3.
+*/
+
 import (
 	"cryptopals/desafio03"
 	"encoding/hex"
@@ -17,10 +29,12 @@ func Desafio04() (Decifragem, error) {
 
 	for i, hexLinha := range hexLista {
 		linhaAtual := i + 1
-		resultadoLinha, err := DecifraByteCifra(hexLinha, linhaAtual)
+		resultadoLinha, err := DecifraByteCifra(
+			hexLinha, linhaAtual)
 
 		if err != nil {
-			log.Printf("Erro ao processar linha %d: %v", linhaAtual, err)
+			log.Printf("Erro ao processar "+
+				"linha %d: %v", linhaAtual, err)
 			continue
 		}
 
