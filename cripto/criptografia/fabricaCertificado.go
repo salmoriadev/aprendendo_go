@@ -5,31 +5,20 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"crypto/x509/pkix"
-	"encoding/pem"
 	"math/big"
 	"time"
 )
 
-type Certificado struct {
-	CertificadoBytes []byte
-	Certificado      *x509.Certificate
-}
+type estrategiaCertificado struct{}
 
-func NovoCertificado() Certificado {
+func (f *estrategiaCertificado) novoCertificado() Certificado {
 	return Certificado{}
 }
 
-func CertificadoParaPEM(certificado *Certificado) []byte {
-	blocoPEM := &pem.Block{
-		Type:  "CERTIFICATE",
-		Bytes: certificado.CertificadoBytes,
-	}
-	return pem.EncodeToMemory(blocoPEM)
-}
-
-func GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
+func (f *estrategiaCertificado) GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
 	sujeito *pkix.Name, validadeEmAnos int) (Certificado, error) {
-	var cert Certificado = NovoCertificado()
+
+	var cert Certificado = f.novoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
 	var permissoesDaChave x509.KeyUsage = x509.KeyUsageCertSign | x509.KeyUsageCRLSign
@@ -58,11 +47,11 @@ func GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
 	return cert, nil
 }
 
-func GerarCertificadoAssinadoPorAC(chavePrivadaSujeito *rsa.PrivateKey,
+func (f *estrategiaCertificado) GerarCertificadoAssinadoPorAC(chavePrivadaSujeito *rsa.PrivateKey,
 	sujeito pkix.Name, validadeEmAnos int, certPai *x509.Certificate,
 	chavePrivadaPai *rsa.PrivateKey) (Certificado, error) {
 
-	var cert Certificado = NovoCertificado()
+	var cert Certificado = f.novoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
 	var permissoesDaChave x509.KeyUsage = x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature
@@ -87,4 +76,8 @@ func GerarCertificadoAssinadoPorAC(chavePrivadaSujeito *rsa.PrivateKey,
 		return cert, err
 	}
 	return cert, nil
+}
+
+func NovaEstrategiaCertificado() EstrategiaCertificado {
+	return &estrategiaCertificado{}
 }

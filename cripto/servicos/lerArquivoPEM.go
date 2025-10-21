@@ -10,7 +10,7 @@ import (
 )
 
 func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
-	chaves := criptografia.NovoParDeChaves()
+	chaves := criptografia.ParDeChaves{}
 	arquivo, err := os.Open(caminho)
 	if err != nil {
 		return chaves, err
@@ -42,7 +42,7 @@ func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
 }
 
 func LerCertificadoDeArquivoPEM(caminho string) (criptografia.Certificado, error) {
-	cert := criptografia.NovoCertificado()
+	cert := criptografia.Certificado{}
 	data, err := os.ReadFile(caminho)
 	if err != nil {
 		return cert, err

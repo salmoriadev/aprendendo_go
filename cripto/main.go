@@ -6,15 +6,25 @@ import (
 	"fmt"
 )
 
+// (Assumindo que 'caminho' está em um arquivo constantes.go no pacote main)
+// const caminho = "arquivos_gerados"
+
 func main() {
 	tamanhoChaves := 2048
 	validadeCertAC := 10
 	validadeCert := 1
-	chaveAc := servicos.ExecucaoChaves(tamanhoChaves, caminho)
-	chaveUsuario := servicos.ExecucaoChaves(tamanhoChaves, caminho)
+
+	estrategiaChave := criptografia.NovaEstrategiaChaveRSA()
+	estrategiaCertificado := criptografia.NovaEstrategiaCertificado()
+	estrategiaResumo := criptografia.NovaEstrategiaResumoSha256()
+	estrategiaAssinatura := criptografia.NovaEstrategiaAssinaturaPkcs1v15()
+
+	chaveAc := servicos.ExecucaoChaves(tamanhoChaves, caminho, estrategiaChave)
+	chaveUsuario := servicos.ExecucaoChaves(tamanhoChaves, caminho, estrategiaChave)
 	servicos.ExecucaoCertificados(chaveAc, chaveUsuario, tamanhoChaves,
 		validadeCertAC, validadeCert, caminho, "UFSC",
-		"BR", "Santa Catarina", "Florianopolis", "localhost")
+		"BR", "Santa Catarina", "Florianopolis", "localhost",
+		estrategiaCertificado)
 
 	caminhoArquivoTxt := caminho + "/mensagem.txt"
 	conteudoArquivo := "Esta é uma mensagem importante."
@@ -22,13 +32,6 @@ func main() {
 	servicos.GerarArquivoPDF(
 		caminhoArquivoTxt, caminho+"/mensagem.pdf",
 		conteudoArquivo)
-
-	estrategiaResumo := &criptografia.ResumoSha256{
-		Algoritmo: "SHA256",
-	}
-	estrategiaAssinatura := &criptografia.AssinaturaPkcs1v15{
-		TipoAssinatura: "PKCS1v15",
-	}
 
 	servicos.ResumirPDF(caminho+"/mensagem.pdf", caminho+"/resumo.txt",
 		estrategiaResumo)

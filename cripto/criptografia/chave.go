@@ -1,7 +1,6 @@
 package criptografia
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
@@ -10,21 +9,6 @@ import (
 type ParDeChaves struct {
 	ChavePublica *rsa.PublicKey
 	ChavePrivada *rsa.PrivateKey
-}
-
-func NovoParDeChaves() ParDeChaves {
-	return ParDeChaves{}
-}
-
-func GerarChavePrivada(tamanho int) (ParDeChaves, error) {
-	chave := NovoParDeChaves()
-	var privada, err = rsa.GenerateKey(rand.Reader, tamanho)
-	if err != nil {
-		return chave, err
-	}
-	chave.ChavePrivada = privada
-	chave.ChavePublica = &privada.PublicKey
-	return chave, nil
 }
 
 func ChavePrivadaParaPEM(chavePrivada *rsa.PrivateKey) []byte {

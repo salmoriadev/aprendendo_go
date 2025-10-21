@@ -46,7 +46,9 @@ func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
 	}
 
 	resumoEmBytes := estrategiaResumo.Resumir(dados)
-	assinatura, err := estrategiaAssinatura.Assinar(resumoEmBytes, chaves.ChavePrivada)
+	hashFunc := estrategiaResumo.HashFunc()
+
+	assinatura, err := estrategiaAssinatura.Assinar(resumoEmBytes, chaves.ChavePrivada, hashFunc)
 	if err != nil {
 		log.Fatalf("Erro ao assinar o resumo: %v", err)
 	}
@@ -69,8 +71,10 @@ func VerificarAssinaturaDocumentoPDF(caminhoArquivoPdf string,
 	}
 
 	resumoEmBytes := estrategiaResumo.Resumir(dados)
+	hashFunc := estrategiaResumo.HashFunc()
+
 	err = estrategiaAssinatura.VerificarAssinatura(resumoEmBytes,
-		assinatura, chavePublica)
+		assinatura, chavePublica, hashFunc)
 	if err != nil {
 		log.Printf("Erro ao verificar a assinatura: %v", err)
 		return false

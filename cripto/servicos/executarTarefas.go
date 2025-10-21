@@ -7,8 +7,10 @@ import (
 	"log"
 )
 
-func ExecucaoChaves(tamanhoChave int, caminho string) criptografia.ParDeChaves {
-	chaves, err := criptografia.GerarChavePrivada(tamanhoChave)
+func ExecucaoChaves(tamanhoChave int, caminho string,
+	estrategia criptografia.EstrategiaChave) criptografia.ParDeChaves {
+
+	chaves, err := estrategia.GerarChavePrivada(tamanhoChave)
 	if err != nil {
 		fmt.Println("Erro ao gerar chave privada: ", err)
 		return criptografia.ParDeChaves{}
@@ -33,7 +35,8 @@ func ExecucaoChaves(tamanhoChave int, caminho string) criptografia.ParDeChaves {
 
 func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	tamanhoChave int, validadeCertAC int, validadeCert int, caminho string,
-	organizacao, pais, provincia, localidade, nomeComum string) {
+	organizacao, pais, provincia, localidade, nomeComum string,
+	estrategia criptografia.EstrategiaCertificado) {
 
 	sujeitoAC := pkix.Name{
 		Organization: []string{"UFC"},
@@ -43,7 +46,7 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 		CommonName:   "chama",
 	}
 
-	certAC, err := criptografia.GerarCertificadoAutoassinado(
+	certAC, err := estrategia.GerarCertificadoAutoassinado(
 		chaveAC.ChavePrivada, &sujeitoAC, validadeCertAC)
 	if err != nil {
 		log.Fatalf("Erro ao gerar certificado autoassinado para AC: %v", err)
@@ -63,7 +66,8 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 		Locality:     []string{localidade},
 		CommonName:   nomeComum,
 	}
-	certUsuario, err := criptografia.GerarCertificadoAssinadoPorAC(
+
+	certUsuario, err := estrategia.GerarCertificadoAssinadoPorAC(
 		chaveCert.ChavePrivada, sujeitoUsuario,
 		validadeCert, certAC.Certificado, chaveAC.ChavePrivada)
 	if err != nil {
