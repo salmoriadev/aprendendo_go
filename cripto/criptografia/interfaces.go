@@ -14,8 +14,10 @@ type EstrategiaChave interface {
 type EstrategiaCertificado interface {
 	GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
 		sujeito *pkix.Name, validadeEmAnos int) (Certificado, error)
-	GerarCertificadoAssinadoPorAC(chavePrivadaSujeito *rsa.PrivateKey,
-		sujeito pkix.Name, validadeEmAnos int, certPai *x509.Certificate,
+	GerarCertificadoAssinadoPorAC(
+		chavePrivadaSujeito *rsa.PrivateKey,
+		sujeito pkix.Name, validadeEmAnos int,
+		certPai *x509.Certificate,
 		chavePrivadaPai *rsa.PrivateKey) (Certificado, error)
 }
 
@@ -25,7 +27,10 @@ type EstrategiaResumo interface {
 }
 
 type EstrategiaAssinatura interface {
-	Assinar(resumo []byte, privKey *rsa.PrivateKey, hashFunc crypto.Hash) ([]byte, error)
+	Assinar(resumo []byte,
+		privKey *rsa.PrivateKey,
+		hashFunc crypto.Hash) ([]byte, error)
 	VerificarAssinatura(resumo []byte,
-		assinatura []byte, pubKey *rsa.PublicKey, hashFunc crypto.Hash) error
+		assinatura []byte, pubKey *rsa.PublicKey,
+		hashFunc crypto.Hash) error
 }

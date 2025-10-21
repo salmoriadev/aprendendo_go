@@ -37,7 +37,8 @@ func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string,
 }
 
 func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
-	chaves *criptografia.ParDeChaves, estrategiaResumo criptografia.EstrategiaResumo,
+	chaves *criptografia.ParDeChaves,
+	estrategiaResumo criptografia.EstrategiaResumo,
 	estrategiaAssinatura criptografia.EstrategiaAssinatura) []byte {
 
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
@@ -48,12 +49,14 @@ func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
 	resumoEmBytes := estrategiaResumo.Resumir(dados)
 	hashFunc := estrategiaResumo.HashFunc()
 
-	assinatura, err := estrategiaAssinatura.Assinar(resumoEmBytes, chaves.ChavePrivada, hashFunc)
+	assinatura, err := estrategiaAssinatura.Assinar(resumoEmBytes,
+		chaves.ChavePrivada, hashFunc)
 	if err != nil {
 		log.Fatalf("Erro ao assinar o resumo: %v", err)
 	}
 
-	err = gerarArquivoTexto(caminhoAssinatura, hex.EncodeToString(assinatura))
+	err = gerarArquivoTexto(caminhoAssinatura,
+		hex.EncodeToString(assinatura))
 	if err != nil {
 		log.Fatalf("Erro ao gerar assinatura: %v", err)
 	}

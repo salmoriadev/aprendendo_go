@@ -75,7 +75,8 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	}
 
 	dadosPEMCertUsuario := criptografia.CertificadoParaPEM(&certUsuario)
-	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
+	err = escreverArquivo(
+		caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
 	if err != nil {
 		log.Fatalf("Erro ao escrever certificado do usuário: %v", err)
 	}

@@ -23,7 +23,8 @@ func (e *estrategiaAssinaturaPkcs1v15) Assinar(resumo []byte,
 }
 
 func (e *estrategiaAssinaturaPkcs1v15) VerificarAssinatura(resumo,
-	assinatura []byte, chavePublica *rsa.PublicKey, hashFunc crypto.Hash) error {
+	assinatura []byte, chavePublica *rsa.PublicKey,
+	hashFunc crypto.Hash) error {
 
 	err := rsa.VerifyPKCS1v15(chavePublica,
 		hashFunc, resumo, assinatura)

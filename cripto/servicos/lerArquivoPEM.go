@@ -41,7 +41,8 @@ func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
 	return chaves, nil
 }
 
-func LerCertificadoDeArquivoPEM(caminho string) (criptografia.Certificado, error) {
+func LerCertificadoDeArquivoPEM(caminho string) (
+	criptografia.Certificado, error) {
 	cert := criptografia.Certificado{}
 	data, err := os.ReadFile(caminho)
 	if err != nil {

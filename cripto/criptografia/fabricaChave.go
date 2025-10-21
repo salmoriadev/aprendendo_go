@@ -11,7 +11,8 @@ func (f *estrategiaChaveRSA) NovoParDeChaves() ParDeChaves {
 	return ParDeChaves{}
 }
 
-func (f *estrategiaChaveRSA) GerarChavePrivada(tamanho int) (ParDeChaves, error) {
+func (f *estrategiaChaveRSA) GerarChavePrivada(
+	tamanho int) (ParDeChaves, error) {
 	chave := f.NovoParDeChaves()
 	privada, err := rsa.GenerateKey(rand.Reader, tamanho)
 	if err != nil {
