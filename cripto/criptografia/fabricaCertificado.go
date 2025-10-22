@@ -19,12 +19,12 @@ func (f *estrategiaCertificado) GerarCertificadoAutoassinado(
 	chavePrivada *rsa.PrivateKey,
 	sujeito *pkix.Name, validadeEmAnos int) (Certificado, error) {
 
-	var cert Certificado = f.novoCertificado()
+	cert := f.novoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
-	var permissoesDaChave x509.KeyUsage = x509.KeyUsageCertSign |
+	permissoesDaChave := x509.KeyUsageCertSign |
 		x509.KeyUsageCRLSign
-	var propositosDaChave []x509.ExtKeyUsage = []x509.ExtKeyUsage{
+	propositosDaChave := []x509.ExtKeyUsage{
 		x509.ExtKeyUsageServerAuth, x509.ExtKeyUsageClientAuth}
 
 	cert.Certificado = &x509.Certificate{
@@ -54,12 +54,12 @@ func (f *estrategiaCertificado) GerarCertificadoAssinadoPorAC(
 	sujeito pkix.Name, validadeEmAnos int, certPai *x509.Certificate,
 	chavePrivadaPai *rsa.PrivateKey) (Certificado, error) {
 
-	var cert Certificado = f.novoCertificado()
+	cert := f.novoCertificado()
 	inicioPrazo := time.Now()
 	validade := inicioPrazo.AddDate(validadeEmAnos, 0, 0)
-	var permissoesDaChave x509.KeyUsage = x509.KeyUsageKeyEncipherment |
+	permissoesDaChave := x509.KeyUsageKeyEncipherment |
 		x509.KeyUsageDigitalSignature
-	var propositosDaChave []x509.ExtKeyUsage = []x509.ExtKeyUsage{
+	propositosDaChave := []x509.ExtKeyUsage{
 		x509.ExtKeyUsageServerAuth}
 
 	cert.Certificado = &x509.Certificate{
@@ -82,6 +82,6 @@ func (f *estrategiaCertificado) GerarCertificadoAssinadoPorAC(
 	return cert, nil
 }
 
-func NovaEstrategiaCertificado() EstrategiaCertificado {
+func NovaEstrategiaCertificado() IEstrategiaCertificado {
 	return &estrategiaCertificado{}
 }

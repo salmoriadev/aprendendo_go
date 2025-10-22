@@ -20,10 +20,10 @@ func main() {
 		caminho, estrategiaChave)
 	chaveUsuario := servicos.ExecucaoChaves(tamanhoChaves,
 		caminho, estrategiaChave)
-	servicos.ExecucaoCertificados(chaveAc, chaveUsuario, tamanhoChaves,
+	servicos.ExecucaoCertificados(chaveAc, chaveUsuario,
 		validadeCertAC, validadeCert, caminho, "UFSC",
-		"BR", "Santa Catarina", "Florianopolis", "localhost",
-		estrategiaCertificado)
+		"BR", "Santa Catarina", "Florianopolis",
+		"localhost", estrategiaCertificado)
 
 	caminhoArquivoTxt := caminho + "/mensagem.txt"
 	conteudoArquivo := "Esta é uma mensagem importante."

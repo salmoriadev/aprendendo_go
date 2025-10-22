@@ -16,6 +16,6 @@ func (e *estrategiaResumoSha256) HashFunc() crypto.Hash {
 	return crypto.SHA256
 }
 
-func NovaEstrategiaResumoSha256() EstrategiaResumo {
+func NovaEstrategiaResumoSha256() IEstrategiaResumo {
 	return &estrategiaResumoSha256{}
 }

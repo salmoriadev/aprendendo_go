@@ -8,7 +8,7 @@ import (
 )
 
 func ExecucaoChaves(tamanhoChave int, caminho string,
-	estrategia criptografia.EstrategiaChave) criptografia.ParDeChaves {
+	estrategia criptografia.IEstrategiaChave) criptografia.ParDeChaves {
 
 	chaves, err := estrategia.GerarChavePrivada(tamanhoChave)
 	if err != nil {
@@ -34,9 +34,9 @@ func ExecucaoChaves(tamanhoChave int, caminho string,
 }
 
 func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
-	tamanhoChave int, validadeCertAC int, validadeCert int, caminho string,
+	validadeCertAC int, validadeCert int, caminho string,
 	organizacao, pais, provincia, localidade, nomeComum string,
-	estrategia criptografia.EstrategiaCertificado) {
+	estrategia criptografia.IEstrategiaCertificado) {
 
 	sujeitoAC := pkix.Name{
 		Organization: []string{"UFC"},
@@ -75,8 +75,7 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	}
 
 	dadosPEMCertUsuario := criptografia.CertificadoParaPEM(&certUsuario)
-	err = escreverArquivo(
-		caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
+	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
 	if err != nil {
 		log.Fatalf("Erro ao escrever certificado do usuário: %v", err)
 	}

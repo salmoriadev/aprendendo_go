@@ -23,6 +23,6 @@ func (f *estrategiaChaveRSA) GerarChavePrivada(
 	return chave, nil
 }
 
-func NovaEstrategiaChaveRSA() EstrategiaChave {
+func NovaEstrategiaChaveRSA() IEstrategiaChave {
 	return &estrategiaChaveRSA{}
 }

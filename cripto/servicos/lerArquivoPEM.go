@@ -15,7 +15,12 @@ func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
 	if err != nil {
 		return chaves, err
 	}
-	defer arquivo.Close()
+	defer func(arquivo *os.File) {
+		err := arquivo.Close()
+		if err != nil {
+			fmt.Println("Erro ao fechar arquivo: ", err)
+		}
+	}(arquivo)
 
 	contents, err := io.ReadAll(arquivo)
 	if err != nil {

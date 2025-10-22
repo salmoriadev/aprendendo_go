@@ -22,7 +22,7 @@ func GerarArquivoPDF(caminhoArquivoTxt string, caminhoArquivoPdf string,
 }
 
 func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string,
-	estrategiaResumo criptografia.EstrategiaResumo) {
+	estrategiaResumo criptografia.IEstrategiaResumo) {
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
 	if err != nil {
 		log.Fatalf("Erro ao ler PDF: %v", err)
@@ -38,8 +38,8 @@ func ResumirPDF(caminhoArquivoPdf string, caminhoResumo string,
 
 func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
 	chaves *criptografia.ParDeChaves,
-	estrategiaResumo criptografia.EstrategiaResumo,
-	estrategiaAssinatura criptografia.EstrategiaAssinatura) []byte {
+	estrategiaResumo criptografia.IEstrategiaResumo,
+	estrategiaAssinatura criptografia.IEstrategiaAssinatura) []byte {
 
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
 	if err != nil {
@@ -65,8 +65,8 @@ func AssinarDocumentoPDF(caminhoArquivoPdf string, caminhoAssinatura string,
 
 func VerificarAssinaturaDocumentoPDF(caminhoArquivoPdf string,
 	assinatura []byte, chavePublica *rsa.PublicKey,
-	estrategiaResumo criptografia.EstrategiaResumo,
-	estrategiaAssinatura criptografia.EstrategiaAssinatura) bool {
+	estrategiaResumo criptografia.IEstrategiaResumo,
+	estrategiaAssinatura criptografia.IEstrategiaAssinatura) bool {
 
 	dados, err := pdfParaBytes(caminhoArquivoPdf)
 	if err != nil {

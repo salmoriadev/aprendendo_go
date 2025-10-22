@@ -7,11 +7,11 @@ import (
 	"crypto/x509/pkix"
 )
 
-type EstrategiaChave interface {
+type IEstrategiaChave interface {
 	GerarChavePrivada(tamanho int) (ParDeChaves, error)
 }
 
-type EstrategiaCertificado interface {
+type IEstrategiaCertificado interface {
 	GerarCertificadoAutoassinado(chavePrivada *rsa.PrivateKey,
 		sujeito *pkix.Name, validadeEmAnos int) (Certificado, error)
 	GerarCertificadoAssinadoPorAC(
@@ -21,12 +21,12 @@ type EstrategiaCertificado interface {
 		chavePrivadaPai *rsa.PrivateKey) (Certificado, error)
 }
 
-type EstrategiaResumo interface {
+type IEstrategiaResumo interface {
 	Resumir(data []byte) []byte
 	HashFunc() crypto.Hash
 }
 
-type EstrategiaAssinatura interface {
+type IEstrategiaAssinatura interface {
 	Assinar(resumo []byte,
 		privKey *rsa.PrivateKey,
 		hashFunc crypto.Hash) ([]byte, error)

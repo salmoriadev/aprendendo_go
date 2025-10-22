@@ -36,6 +36,6 @@ func (e *estrategiaAssinaturaPkcs1v15) VerificarAssinatura(resumo,
 	return nil
 }
 
-func NovaEstrategiaAssinaturaPkcs1v15() EstrategiaAssinatura {
+func NovaEstrategiaAssinaturaPkcs1v15() IEstrategiaAssinatura {
 	return &estrategiaAssinaturaPkcs1v15{}
 }
