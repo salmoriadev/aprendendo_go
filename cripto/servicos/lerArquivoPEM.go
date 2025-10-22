@@ -56,7 +56,8 @@ func LerCertificadoDeArquivoPEM(caminho string) (
 
 	bloco, _ := pem.Decode(data)
 	if bloco == nil || bloco.Type != "CERTIFICATE" {
-		return cert, fmt.Errorf("arquivo PEM inválido ou sem certificado")
+		return cert, fmt.Errorf(
+			"arquivo PEM inválido ou sem certificado")
 	}
 
 	cert.CertificadoBytes = bloco.Bytes

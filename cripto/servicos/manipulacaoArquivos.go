@@ -88,7 +88,8 @@ func VerificarAssinaturaDocumentoPDF(caminhoArquivoPdf string,
 func gerarArquivoTexto(caminho string, conteudo string) error {
 	diretorio := filepath.Dir(caminho)
 	if err := os.MkdirAll(diretorio, 0755); err != nil {
-		return fmt.Errorf("erro ao criar diretório %s: %w", diretorio, err)
+		return fmt.Errorf(
+			"erro ao criar diretório %s: %w", diretorio, err)
 	}
 	return os.WriteFile(caminho, []byte(conteudo), 0644)
 }
@@ -119,7 +120,8 @@ func txtParaPdf(caminhoTxt string, caminhoPdf string) {
 func escreverArquivo(caminho string, dados []byte) error {
 	diretorio := filepath.Dir(caminho)
 	if err := os.MkdirAll(diretorio, 0755); err != nil {
-		return fmt.Errorf("erro ao criar diretório %s: %w", diretorio, err)
+		return fmt.Errorf(
+			"erro ao criar diretório %s: %w", diretorio, err)
 	}
 	return os.WriteFile(caminho, dados, 0644)
 }

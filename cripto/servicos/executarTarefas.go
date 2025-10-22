@@ -49,7 +49,8 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	certAC, err := estrategia.GerarCertificadoAutoassinado(
 		chaveAC.ChavePrivada, &sujeitoAC, validadeCertAC)
 	if err != nil {
-		log.Fatalf("Erro ao gerar certificado autoassinado para AC: %v", err)
+		log.Fatalf(
+			"Erro ao gerar certificado autoassinado para AC: %v", err)
 	}
 
 	dadosPEMCertAC := criptografia.CertificadoParaPEM(&certAC)
@@ -75,7 +76,8 @@ func ExecucaoCertificados(chaveAC, chaveCert criptografia.ParDeChaves,
 	}
 
 	dadosPEMCertUsuario := criptografia.CertificadoParaPEM(&certUsuario)
-	err = escreverArquivo(caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
+	err = escreverArquivo(
+		caminho+"/certificado_usuario.pem", dadosPEMCertUsuario)
 	if err != nil {
 		log.Fatalf("Erro ao escrever certificado do usuário: %v", err)
 	}
