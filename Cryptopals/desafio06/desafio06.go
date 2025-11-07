@@ -1,19 +1,12 @@
 package desafio06
 
 /*
-Desafio 06 - Quebrando o XOR com chave repetida
-Neste desafio, você precisa decifrar um texto que foi cifrado usando
-uma cifra XOR com chave repetida com o tamanho da chave desconhecido.
-Me baseei na explicação do desafio para implementar a solução, acredito que pela
-maior dificuldade dele existiu uma necessidade de uma explicação maior.
-Primeiramente você deve determinar o tamanho da chave usando a distância de Hamming;
-Como blocos em inglês têm padrões semelhantes, você pode usar a distância
-de Hamming (ou distância de bits) para estimar o tamanho da chave.
-Após isso vai dividir o texto cifrado em blocos do tamanho da chave.
-Vai transpor os blocos para que cada bloco contenha os bytes correspondentes.
-Vai resolver cada bloco como um problema de XOR de byte único.
-E por último, reunir os resultados para obter o texto decifrado.
-O código reutiliza o mapa de pontuação e uma função do desafio 3.
+Quebra de XOR com Chave Repetida (Desafio 06)
+
+Resolve o clássico desafio do Set 1: estimar o tamanho da chave via distância
+de Hamming, transpor os blocos e tratar cada coluna como um single-byte XOR
+reutilizando a pontuação do desafio 3. O objetivo é exclusivamente decifrar o
+arquivo `desafio06/6.txt` sem generalizações extras.
 */
 
 import (
@@ -33,6 +26,10 @@ type PalpiteTamanhoDaChave struct {
 	Distancia float64
 }
 
+/*
+DistanciaDeBits calcula a distância de Hamming entre dois slices de mesmo
+tamanho.
+*/
 func DistanciaDeBits(lista1, lista2 []byte) (int, error) {
 	if len(lista1) != len(lista2) {
 		return 0, errors.New("listas devem ter o mesmo tamanho")
@@ -46,16 +43,18 @@ func DistanciaDeBits(lista1, lista2 []byte) (int, error) {
 	return distancia, nil
 }
 
+/*
+AcharTamanhoChave testa tamanhos possíveis avaliando a distância de Hamming
+normalizada entre blocos consecutivos. Para o Set 1, ignoramos tamanhos que não
+coubem na amostragem solicitada ao invés de abortar a execução inteira.
+*/
 func AcharTamanhoChave(textoCifrado []byte, tamanhoMinimo,
 	tamanhoMaximo, numeroBlocos int) ([]PalpiteTamanhoDaChave, error) {
 	var palpites []PalpiteTamanhoDaChave
 
 	for tamanhoChave := tamanhoMinimo; tamanhoChave <= tamanhoMaximo; tamanhoChave++ {
 		if (numeroBlocos * tamanhoChave) > len(textoCifrado) {
-			return nil, fmt.Errorf(
-				"texto cifrado muito curto para o tamanho"+
-					" da chave %d e número de blocos %d",
-				tamanhoChave, numeroBlocos)
+			continue
 		}
 
 		var distanciaTotal float64
@@ -92,6 +91,10 @@ func AcharTamanhoChave(textoCifrado []byte, tamanhoMinimo,
 	return palpites, nil
 }
 
+/*
+ResolverSingleByteXOR recicla a lógica do desafio 3 para achar a melhor chave
+de um XOR de byte único.
+*/
 func ResolverSingleByteXOR(textoCifrado []byte) (chave byte,
 	textoPlano []byte, pontuacao float64) {
 	var maxPontuacao float64 = -1.0
@@ -120,6 +123,9 @@ func ResolverSingleByteXOR(textoCifrado []byte) (chave byte,
 	return melhorChave, melhorTextoPlano, maxPontuacao
 }
 
+/*
+AchaChaveRepetida transpõe os blocos e resolve cada coluna como single-byte.
+*/
 func AchaChaveRepetida(textoCifrado []byte, tamanhoChave int) []byte {
 	chave := make([]byte, tamanhoChave)
 	blocosTranspostos := make([][]byte, tamanhoChave)
@@ -142,6 +148,9 @@ func AchaChaveRepetida(textoCifrado []byte, tamanhoChave int) []byte {
 	return chave
 }
 
+/*
+XorComChaveRepetida aplica a chave repetidamente sobre o buffer de entrada.
+*/
 func XorComChaveRepetida(entrada, chave []byte) []byte {
 	saida := make([]byte, len(entrada))
 	for i := 0; i < len(entrada); i++ {
@@ -152,6 +161,9 @@ func XorComChaveRepetida(entrada, chave []byte) []byte {
 	return saida
 }
 
+/*
+Desafio06 executa ponta a ponta a solução do Set 1 para o arquivo `6.txt`.
+*/
 func Desafio06() (string, string, error) {
 
 	frase01 := []byte("this is a test")
@@ -184,6 +196,10 @@ func Desafio06() (string, string, error) {
 	if err != nil {
 		return "", "", fmt.Errorf(
 			"falha ao achar o tamanho da chave: %w", err)
+	}
+	if len(PalpiteTamanhoDaChave) == 0 {
+		return "", "", fmt.Errorf(
+			"nenhum tamanho de chave válido encontrado para o ciphertext")
 	}
 
 	melhorTamanhoChave := PalpiteTamanhoDaChave[0].Tamanho

@@ -1,17 +1,11 @@
 package desafio03
 
 /*
-Desafio 03 - Achar chave e decifrar cifra XOR de byte único
-Neste desafio, você precisa decifrar um texto que foi cifrado
-usando XOR com um único byte. Para isso, você deve tentar todas
-as combinações possíveis de chaves de 1 byte (0-255) e avaliar
-qual delas produz um texto legível. Para avaliar a legibilidade,
-você pode usar uma pontuação baseada na frequência das letras
-na língua inglesa. Fiz dessa forma, criando um mapa com a
-frequência das letras e somando os valores para cada caractere
-do texto decifrado. A chave que resultar na maior pontuação é
-considerada a correta, e o texto decifrado correspondente é o
-resultado final. O código será reutilizado no desafio 4 e 6.
+Quebra de Single-Byte XOR (Desafio 03)
+
+Exaustivamente testa as 256 chaves possíveis, pontua os textos decifrados com
+um mapa de frequências em inglês e retorna o melhor palpite. Os utilitários são
+reaproveitados pelos desafios 4 e 6.
 */
 
 import (
@@ -43,6 +37,10 @@ type ResultadoDecifrado struct {
 	Chave     byte
 }
 
+/*
+Desafio03 resolve a cifra single-byte disponibilizada pelo enunciado, retornando
+texto, pontuação e chave.
+*/
 func Desafio03() (ResultadoDecifrado, error) {
 	hexCifra := "1b37373331363f78151b7f" +
 		"2b783431333d78397828372d363c78373e783a393b3736"
@@ -54,6 +52,10 @@ func Desafio03() (ResultadoDecifrado, error) {
 	return resultado, nil
 }
 
+/*
+AcharChave percorre as 256 possibilidades e usa PontuacaoTexto para definir o
+melhor resultado.
+*/
 func AcharChave(entradaHex string) (ResultadoDecifrado, error) {
 	entradaHexBytes, err := hex.DecodeString(entradaHex)
 	if err != nil {
@@ -82,6 +84,10 @@ func AcharChave(entradaHex string) (ResultadoDecifrado, error) {
 	return melhorResultado, nil
 }
 
+/*
+PontuacaoTexto soma frequências aproximadas de inglês e penaliza caracteres
+não imprimíveis.
+*/
 func PontuacaoTexto(textoBytes []byte) int {
 	pontuacao := 0
 	for _, bytes := range textoBytes {

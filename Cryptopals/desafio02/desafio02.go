@@ -1,31 +1,35 @@
 package desafio02
 
 /*
-Desafio 02 - Operação XOR entre duas strings hexadecimais
-Neste desafio, você precisa realizar uma operação XOR entre
-duas strings hexadecimais. Apenas precisei fazer uma função
-para fazer o XOR entre dois arrays de bytes dentro de um for loop.
-Esse código será reutilizado no desafio 5.
+Operações XOR (Desafio 02)
+
+Resolve o desafio 2 do Set 1: aplicar XOR posição a posição em dois buffers
+hexadecimais e devolver o resultado em hex. O helper é reaproveitado pelo
+desafio 5.
 */
 
 import (
 	"encoding/hex"
 )
 
+/*
+XorBytes executa XOR byte a byte retornando um novo slice, repetindo a chave
+quando necessário. Mantemos a função sem efeitos colaterais para reutilizar nos
+demais desafios do Set 1.
+*/
 func XorBytes(mensagem, chave []byte) []byte {
-	if len(mensagem) > len(chave) {
-		tamanhoChave := len(chave)
-		for i := 0; i < len(mensagem); i++ {
-			mensagem[i] ^= chave[i%tamanhoChave]
-		}
-	} else {
-		for i := 0; i < len(mensagem); i++ {
-			mensagem[i] ^= chave[i]
-		}
+	saida := make([]byte, len(mensagem))
+	tamanhoChave := len(chave)
+	for i := 0; i < len(mensagem); i++ {
+		saida[i] = mensagem[i] ^ chave[i%tamanhoChave]
 	}
-	return mensagem
+	return saida
 }
 
+/*
+Desafio02 usa XorBytes em duas strings fixas do enunciado e retorna a resposta
+em hex.
+*/
 func Desafio02() (string, error) {
 	hexString1 := "1c0111001f010100061a024b53535009181c"
 	hexString2 := "686974207468652062756c6c277320657965"

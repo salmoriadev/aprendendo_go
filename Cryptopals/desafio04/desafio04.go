@@ -1,15 +1,11 @@
 package desafio04
 
 /*
-Desafio 04 - Detectando Single-Byte XOR
-Neste desafio, você precisa detectar qual linha em um arquivo
-contém uma cifra que foi cifrada usando uma cifra XOR de byte único. Para isso,
-você deve ler cada linha do arquivo, decodificar a string hexadecimal e tentar
-decifrar o texto usando todas as possíveis chaves de 1 byte (0-255). Para cada
-linha, você deve calcular a pontuação do texto decifrado e manter o controle
-da melhor pontuação encontrada até o momento. No final, você deve retornar o texto decifrado
-com a melhor pontuação, juntamente com a chave usada e o número da linha.
-O código reutiliza a lógica de pontuação do desafio 3.
+Detecção de Single-Byte XOR (Desafio 04)
+
+Varre a lista de hex strings fornecida pelo desafio 4, decifra cada uma com a
+rotina do desafio 3 e devolve a linha mais provável. Complementa o Set 1 sem
+se preocupar com leitura de arquivos externos.
 */
 
 import (
@@ -24,6 +20,10 @@ type Decifragem struct {
 	NumeroLinha int
 }
 
+/*
+Desafio04 percorre a lista de hex strings e devolve a melhor candidata de
+cifra single-byte.
+*/
 func Desafio04() (Decifragem, error) {
 	var melhorResultado Decifragem
 
@@ -49,6 +49,9 @@ func Desafio04() (Decifragem, error) {
 	return Decifragem{}, fmt.Errorf("nenhuma linha foi processada com sucesso")
 }
 
+/*
+DecifraByteCifra isola a lógica de tentativa das 256 chaves para uma linha.
+*/
 func DecifraByteCifra(linhaHex string, numeroLinha int) (Decifragem, error) {
 	cifra, err := hex.DecodeString(linhaHex)
 	if err != nil {

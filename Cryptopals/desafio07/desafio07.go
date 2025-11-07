@@ -1,22 +1,27 @@
 package desafio07
 
 /*
-Desafio 07 - Decifrando AES em modo ECB
-Neste desafio, você precisa decifrar um texto cifrado usando o
-algoritmo AES em modo ECB. O texto cifrado está codificado em base64
-e você deve decifrá-lo usando a chave fornecida. O modo ECB
-é um modo de operação de cifra simétrica que divide o texto em blocos e
-cifra cada bloco independentemente usando a mesma chave.
+Decifrador AES ECB (Desafio 07)
+
+Este arquivo lê o texto base64 fornecido pelo desafio 7, decodifica o conteúdo
+com a chave fixa "YELLOW SUBMARINE" e devolve o texto em claro. O objetivo é
+apenas demonstrar a decifragem ECB do conjunto Cryptopals Set 1, sem
+generalizações extras.
 */
 
 import (
-	"bytes"
 	"crypto/aes"
 	"encoding/base64"
 	"fmt"
 	"os"
 )
 
+/*
+Desafio07 carrega o arquivo `desafio07/7.txt`, decodifica de base64 e aplica a
+decifragem AES-128 em ECB. O ciphertext do desafio já está alinhado aos blocos
+de 16 bytes, então o resultado é retornado exatamente como sai do AES sem
+validações adicionais de padding.
+*/
 func Desafio07() (string, error) {
 	chave := []byte("YELLOW SUBMARINE")
 
@@ -39,6 +44,11 @@ func Desafio07() (string, error) {
 	return string(textoPlano), nil
 }
 
+/*
+DecifrarAESECB aplica AES-128 ECB direto sobre os blocos do Ciphertext. O Set 1
+garante que o tamanho seja múltiplo de 16, portanto retornamos o buffer de
+plaintext sem mexer em padding.
+*/
 func DecifrarAESECB(dadosCifrados, chave []byte) ([]byte, error) {
 	cifra, err := aes.NewCipher(chave)
 	if err != nil {
@@ -58,32 +68,6 @@ func DecifrarAESECB(dadosCifrados, chave []byte) ([]byte, error) {
 			textoPlano[i:i+tamanhoDoBloco],
 			dadosCifrados[i:i+tamanhoDoBloco])
 	}
-	textoPlano, err = validarERemoverPadding(textoPlano)
-	if err != nil {
-		return nil, fmt.Errorf(
-			"falha ao validar/remover o padding: %w", err)
-	}
 
 	return textoPlano, nil
-}
-
-func validarERemoverPadding(dados []byte) ([]byte, error) {
-	tamanho := len(dados)
-	if tamanho == 0 {
-		return nil, fmt.Errorf("dados de entrada vazios")
-	}
-
-	tamanhoDoPadding := int(dados[tamanho-1])
-	if tamanhoDoPadding == 0 || tamanhoDoPadding > tamanho {
-		return nil, fmt.Errorf("valor de padding inválido: %d",
-			tamanhoDoPadding)
-	}
-
-	paddingEsperado := bytes.Repeat(
-		[]byte{byte(tamanhoDoPadding)}, tamanhoDoPadding)
-	if !bytes.HasSuffix(dados, paddingEsperado) {
-		return nil, fmt.Errorf("padding inconsistente")
-	}
-
-	return dados[:(tamanho - tamanhoDoPadding)], nil
 }

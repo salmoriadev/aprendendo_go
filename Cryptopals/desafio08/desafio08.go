@@ -1,13 +1,10 @@
 package desafio08
 
 /*
-Desafio 08 - Detectando AES em modo ECB
-Neste desafio, você precisa detectar qual linha em um arquivo contém
-um texto cifrado usando o algoritmo AES em modo ECB. O modo ECB é
-um modo de operação de cifra simétrica que divide o texto em blocos e
-cifra cada bloco independentemente usando a mesma chave. Isso traz
-vulnerabilidades, como a possibilidade de blocos repetidos no texto cifrado
-indicar padrões no texto original. Esse é a base para decifrar o desafio.
+Detector de AES-ECB (Desafio 08)
+
+Localiza qual linha de `8.txt` apresenta blocos de 16 bytes repetidos, sinal
+clássico do modo ECB.
 */
 
 import (
@@ -25,6 +22,9 @@ type ResultadoECB struct {
 	Cifra         string
 }
 
+/*
+AcharECB conta blocos repetidos de 16 bytes no ciphertext.
+*/
 func AcharECB(dadosCifrados []byte) int {
 	blocos := make(map[string]int)
 	for i := 0; i < len(dadosCifrados); i += tamanhoDoBloco {
@@ -41,6 +41,10 @@ func AcharECB(dadosCifrados []byte) int {
 	return numRepeticoes
 }
 
+/*
+Desafio08 varre `8.txt`, decodifica cada linha em hex e retorna a linha mais
+indicativa de ECB.
+*/
 func Desafio08() (ResultadoECB, error) {
 	arquivo, err := os.Open("desafio08/8.txt")
 	if err != nil {
