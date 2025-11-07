@@ -1,3 +1,8 @@
+/*
+Interfaces que definem contratos das estratégias criptográficas empregadas no
+projeto, permitindo trocar algoritmos em tempo de execução sem afetar o
+orquestrador de serviços.
+*/
 package criptografia
 
 import (

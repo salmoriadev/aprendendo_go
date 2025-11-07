@@ -1,0 +1,13 @@
+# Arquivos gerados durante a execução
+arquivos_gerados/
+
+# Chaves e certificados eventuais criados em outros diretórios
+*.pem
+*.cer
+*.crt
+*.key
+
+# Binários do Go
+/cripto
+*.exe
+*.out

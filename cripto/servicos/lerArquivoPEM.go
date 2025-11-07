@@ -1,3 +1,7 @@
+/*
+Utilitários voltados à leitura de chaves e certificados em formato PEM,
+permitindo reutilização de artefatos gerados pelo fluxo em outros cenários.
+*/
 package servicos
 
 import (
@@ -9,6 +13,7 @@ import (
 	"os"
 )
 
+// LerChavesDeArquivoPEM percorre um arquivo PEM e carrega chaves pública/privada em memória.
 func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
 	chaves := criptografia.ParDeChaves{}
 	arquivo, err := os.Open(caminho)
@@ -46,6 +51,8 @@ func LerChavesDeArquivoPEM(caminho string) (criptografia.ParDeChaves, error) {
 	return chaves, nil
 }
 
+// LerCertificadoDeArquivoPEM abre um arquivo PEM e reconstrói a estrutura de
+// certificado X.509 correspondente.
 func LerCertificadoDeArquivoPEM(caminho string) (
 	criptografia.Certificado, error) {
 	cert := criptografia.Certificado{}

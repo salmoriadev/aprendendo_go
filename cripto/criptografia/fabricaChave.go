@@ -1,3 +1,8 @@
+/*
+Implementação da estratégia de geração de chaves RSA, isolando a criação e
+expondo o contrato definido em interfaces para permitir troca futura por outros
+algoritmos.
+*/
 package criptografia
 
 import (
@@ -7,10 +12,13 @@ import (
 
 type estrategiaChaveRSA struct{}
 
+// NovoParDeChaves cria uma estrutura inicializada para receber as chaves RSA geradas.
 func (f *estrategiaChaveRSA) NovoParDeChaves() ParDeChaves {
 	return ParDeChaves{}
 }
 
+// GerarChavePrivada cria um novo par RSA com o tamanho solicitado,
+// preenchendo a estrutura de retorno.
 func (f *estrategiaChaveRSA) GerarChavePrivada(
 	tamanho int) (ParDeChaves, error) {
 	chave := f.NovoParDeChaves()
@@ -23,6 +31,7 @@ func (f *estrategiaChaveRSA) GerarChavePrivada(
 	return chave, nil
 }
 
+// NovaEstrategiaChaveRSA expõe a implementação de geração de chaves RSA via interface.
 func NovaEstrategiaChaveRSA() IEstrategiaChave {
 	return &estrategiaChaveRSA{}
 }

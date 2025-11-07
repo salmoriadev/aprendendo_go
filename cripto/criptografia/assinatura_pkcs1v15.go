@@ -1,3 +1,7 @@
+/*
+Estratégia de assinatura digital baseada em PKCS#1 v1.5, implementando o
+contrato de assinatura e verificação utilizado pela camada de serviços.
+*/
 package criptografia
 
 import (
@@ -9,6 +13,7 @@ import (
 
 type estrategiaAssinaturaPkcs1v15 struct{}
 
+// Assinar aplica PKCS#1 v1.5 sobre o resumo informado utilizando a chave privada.
 func (e *estrategiaAssinaturaPkcs1v15) Assinar(resumo []byte,
 	chavePrivada *rsa.PrivateKey, hashFunc crypto.Hash) ([]byte, error) {
 
@@ -22,6 +27,7 @@ func (e *estrategiaAssinaturaPkcs1v15) Assinar(resumo []byte,
 	return assinatura, nil
 }
 
+// VerificarAssinatura compara a assinatura fornecida com o resumo gerado usando a chave pública.
 func (e *estrategiaAssinaturaPkcs1v15) VerificarAssinatura(resumo,
 	assinatura []byte, chavePublica *rsa.PublicKey,
 	hashFunc crypto.Hash) error {
@@ -36,6 +42,7 @@ func (e *estrategiaAssinaturaPkcs1v15) VerificarAssinatura(resumo,
 	return nil
 }
 
+// NovaEstrategiaAssinaturaPkcs1v15 expõe a estratégia de assinatura PKCS#1 v1.5 para injeção de dependência.
 func NovaEstrategiaAssinaturaPkcs1v15() IEstrategiaAssinatura {
 	return &estrategiaAssinaturaPkcs1v15{}
 }

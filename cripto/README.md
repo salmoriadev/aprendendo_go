@@ -1,8 +1,8 @@
 # Aprendendo Go: Pequena aplicação de certificação digital
 
-Este projeto faz parte da minha jornada de estudos em Go. O objetivo principal é implementar um fluxo criptográfico básico de ICP, aplicando conceitos de design patterns e boas práticas de arquitetura de software.
+Este projeto faz parte da minha jornada de estudos em Go. O objetivo principal é implementar um fluxo criptográfico básico de ICP, aplicando conceitos de design patterns (principalmente Strategy) e boas práticas de arquitetura de software.
 
-O código demonstra como estruturar uma aplicação Go de forma modular, permitindo trocar algoritmos em tempo de execução sem alterar a lógica principal do sistema.
+O código demonstra como estruturar uma aplicação Go de forma modular, permitindo trocar algoritmos em tempo de execução sem alterar a lógica principal do sistema. Cada pacote tem responsabilidades bem definidas e conta com documentação em português explicando o contexto de uso.
 
 ---
 
@@ -10,12 +10,12 @@ O código demonstra como estruturar uma aplicação Go de forma modular, permiti
 
 O projeto simula um cenário real de assinatura digital de documentos, executando as etapas abaixo:
 
-1. **Gera chaves** — cria pares de chaves RSA (pública e privada).  
+1. **Gera chaves** — cria pares de chaves RSA (pública e privada) e grava em disco (`chave_autoridade_*.pem`, `chave_usuario_*.pem`).  
 2. **Cria certificados** — gera uma Autoridade Certificadora (CA) raiz e emite um certificado de usuário assinado por ela.  
 3. **Prepara um documento** — cria um arquivo `.txt` com uma mensagem e o converte para `.pdf`.  
-4. **Assina e verifica**:
-   - Gera um resumo criptográfico (hash) do PDF.
-   - Assina digitalmente esse resumo usando a chave privada do usuário.
+4. **Assina e verifica**:  
+   - Gera um resumo criptográfico (hash SHA-256) do PDF.  
+   - Assina digitalmente esse resumo usando a chave privada do usuário.  
    - Verifica a validade da assinatura usando a chave pública do usuário.
 
 Todo o resultado (chaves, certificados, PDF e arquivos de assinatura) é salvo na pasta `arquivos_gerados/`.
@@ -26,20 +26,21 @@ Todo o resultado (chaves, certificados, PDF e arquivos de assinatura) é salvo n
 
 Para manter o código limpo, testável e flexível, o projeto é dividido em pacotes com responsabilidades únicas:
 
-- **`package criptografia`**
+- **`package criptografia`**  
   - Contém apenas a lógica pura de criptografia (opera em `[]byte`).
-  - Não tem dependência de I/O ou arquivos.
-  - Funções típicas: `GerarChavePrivada`, `GerarCertificadoAutoassinado`, `ChavePrivadaParaPEM`, etc.
+  - Não possui dependência de I/O ou caminhos de arquivo.  
+  - Implementa as interfaces `IEstrategiaChave`, `IEstrategiaCertificado`, `IEstrategiaResumo`, `IEstrategiaAssinatura`.  
+  - Exemplos: `GerarCertificadoAutoassinado`, `ChavePrivadaParaPEM`, `NovaEstrategiaAssinaturaPkcs1v15`.
 
-- **`package servicos`**
+- **`package servicos`**  
   - Responsável por todo o I/O (leitura/escrita de `.pem`, `.pdf`, `.txt`).
-  - Orquestra o fluxo: chama `criptografia` para obter dados puros e persiste no disco.
-  - Funções típicas: `ExecucaoChaves`, `ExecucaoCertificados`, `AssinarDocumentoPDF`.
+  - Orquestra o fluxo chamando o pacote `criptografia` e persistindo os resultados.  
+  - Exemplos: `GerarParDeChaves`, `GerarCertificados`, `AssinarDocumentoPDF`, `VerificarAssinaturaDocumentoPDF`.
 
-- **`package main`**
-  - Faz a "ligação" do sistema e injeta as dependências.
+- **`package main`**  
+  - Faz a "ligação" do sistema, injeta as dependências e documenta o uso do Strategy Pattern através da struct `ConfiguracaoCriptografia`.
 
-O núcleo do estudo foi desacoplar a lógica de negócio da implementação de algoritmos específicos — por isso a criação de interfaces no pacote `criptografia` que permitem trocar estratégias.
+Há comentários de bloco no início de cada arquivo e em todas as funções para contextualizar o papel de cada peça na demonstração — um diferencial para o portfólio.
 
 ---
 
@@ -60,6 +61,9 @@ O núcleo do estudo foi desacoplar a lógica de negócio da implementação de a
 > Observação: `go mod` gerencia dependências automaticamente; não é necessário instalar manualmente os pacotes.
 
 ---
+
+## Execução
+
 1. **Clone o repositório:**
 ```bash
 git clone https://github.com/salmoriadev/aprendendo_go.git
@@ -80,5 +84,16 @@ go run .
 4. **Verifique os resultados:**
 
 - O console exibirá as etapas de geração e validação da assinatura.
+- A pasta `arquivos_gerados/` conterá os arquivos gerados (`.pem`, `.pdf`, `.txt` e a assinatura).
 
-- A pasta arquivos_gerados/ conterá os arquivos gerados: .pem, .pdf, .txt e a assinatura.
+---
+
+## Testes
+
+O projeto inclui testes para todos os pacotes, validando geração de chaves/certificados, fluxo completo de PDF e configuração padrão.
+
+```bash
+go test ./...
+```
+
+Os testes usam chaves RSA de 1024 bits para acelerar a execução, enquanto a aplicação principal gera chaves de 2048 bits. Ajuste o tamanho conforme necessário para seus experimentos.
