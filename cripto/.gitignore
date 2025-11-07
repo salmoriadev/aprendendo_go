@@ -7,6 +7,9 @@ arquivos_gerados/
 *.crt
 *.key
 
+# Diretórios de IDE
+.idea/
+
 # Binários do Go
 /cripto
 *.exe
